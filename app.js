@@ -3,12 +3,17 @@ const app = express()
 const port = 3000
 
 app.use((req, res, next) => {
-  const time = new Date
-  console.log(`${time.toLocaleString()} | ${req.method} from ${req.url}`)
+  const req_time = new Date
+  res.on('finish', () => {
+    const res_time = new Date
+    const duration = res_time - req_time
+    const server_log = `${req_time.toLocaleString()} | ${req.method} from ${req.url} | total time: ${duration}ms`
+    console.log(server_log)
+  })
   next()
 })
 
-app.get('/', (req, res) => {
+app.get('/', (req, res, next) => {
   res.send('列出全部 Todo')
 })
 
